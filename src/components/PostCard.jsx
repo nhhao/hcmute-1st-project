@@ -1,11 +1,14 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const PostCard = ({ article }) => {
     return (
         <Card>
             <img src={article.urlToImage} alt="" />
             <Content>
-                <h2>{article.title}</h2>
+                <h2>
+                    <Link to="/article">{article.title}</Link>
+                </h2>
                 <p>{article.description}</p>
             </Content>
             <Author>Author: {article.author}</Author>
@@ -55,7 +58,9 @@ const Content = styled.div`
     margin-left: 1rem;
 
     h2 {
-        color: #04d28f;
+        a {
+            color: #04d28f;
+        }
     }
 
     p {

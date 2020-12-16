@@ -11,6 +11,11 @@ const GlobalStyle = createGlobalStyle`
     body {
         padding: 0 10rem;
     }
+
+    a {
+        text-decoration: none;
+    }
+
 `;
 
 export default GlobalStyle;

@@ -1,9 +1,12 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
         <Nav>
-            <div className="logo">Something</div>
+            <div className="logo">
+                <Link to="/">Something</Link>
+            </div>
             <div className="authentication">
                 <a href="http://google.com">Log In</a>
                 <button>Sign Up</button>
@@ -58,10 +61,12 @@ const Nav = styled.div`
     }
 
     .logo {
-        font-family: 'Satisfy', cursive;
-        font-size: 1.5rem;
-        color: #fec516;
-        cursor: pointer;
+        a {
+            font-family: 'Satisfy', cursive;
+            font-size: 1.5rem;
+            color: #fec516;
+            cursor: pointer;
+        }
     }
 `;
 

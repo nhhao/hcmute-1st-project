@@ -5,7 +5,7 @@ const Homepage = ({ articles }) => {
     return (
         <div>
             {articles.map((article) => (
-                <PostCard article={article} />
+                <PostCard article={article} key={article.url} />
             ))}
             <PageNumber />
         </div>
