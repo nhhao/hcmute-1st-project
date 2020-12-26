@@ -1,23 +1,36 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 
-const Comment = () => {
+const Comment = ({ comment }) => {
+    const [userAvatarUrl, setUserAvatarUrl] = useState(
+        'https://previews.123rf.com/images/igorrita/igorrita1507/igorrita150700024/42584408-flat-hipster-character-stylish-young-guy-with-glasses-avatar-icon-man-vector-illustration-eps10.jpg'
+    );
+
+    useEffect(() => {
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        axios
+            .post(
+                'http://192.168.43.55:8080/webproj/postUserAvatar',
+                {
+                    username: comment.username,
+                },
+                { headers }
+            )
+            .then((response) => setUserAvatarUrl(response.data.avatarUrl))
+            .catch((error) => console.log(error));
+    }, [comment.username]);
+
     return (
         <CommentStyled>
             <div>
-                <img
-                    src="https://previews.123rf.com/images/igorrita/igorrita1507/igorrita150700024/42584408-flat-hipster-character-stylish-young-guy-with-glasses-avatar-icon-man-vector-illustration-eps10.jpg"
-                    alt="Avatar"
-                />
-                <span className="username">Nhathao0215</span>
-                <span className="datetime">12/17/2020 | 03:22</span>
+                <img src={userAvatarUrl} alt="Avatar" />
+                <span className="username">{comment.username}</span>
+                <span className="datetime">
+                    {comment.datetime.slice(0, 16)}
+                </span>
             </div>
-            <p>
-                Incredible. I can't believe in my eyes. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Quidem, itaque! Rem quis, sit
-                blanditiis cumque aspernatur aut. Nulla. Lorem Lorem, ipsum
-                dolor sit amet consectetur adipisicing elit. ipsum dolor sit
-                amet consectetur adipisicing elit.
-            </p>
+            <p>{comment.content}</p>
         </CommentStyled>
     );
 };

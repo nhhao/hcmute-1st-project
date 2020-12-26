@@ -1,19 +1,25 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 const PostCard = ({ article }) => {
     return (
         <Card>
-            <img src={article.urlToImage} alt="" />
+            <img src={article.thumbnailUrl} alt="" />
             <Content>
                 <h2>
-                    <Link to="/article">{article.title}</Link>
+                    <Link to={article.url}>{article.title}</Link>
                 </h2>
                 <p>{article.description}</p>
             </Content>
             <Author>Author: {article.author}</Author>
-            <Date>Date: {article.publishedAt}</Date>
-            <Vote>Up: 100 | Down: 18</Vote>
+            <Date>Date: {article.datetime}</Date>
+            <Vote>
+                <FontAwesomeIcon icon={faCaretUp} />{' '}
+                <span>{article.upVote - article.downVote}</span>
+                <FontAwesomeIcon icon={faCaretDown} />
+            </Vote>
         </Card>
     );
 };
@@ -37,9 +43,27 @@ const Card = styled.div`
 `;
 
 const Vote = styled.span`
+    display: flex;
+    align-items: center;
+
     position: absolute;
     bottom: 1.2rem;
     right: 2rem;
+
+    svg {
+        font-size: 2rem;
+
+        color: #888;
+
+        cursor: pointer;
+        &:not(:first-child) {
+            margin-left: 0.35rem;
+        }
+    }
+
+    span {
+        margin-left: 0.35rem;
+    }
 `;
 
 const Author = styled.div`

@@ -1,23 +1,98 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Comment from './Comment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-const Comments = () => {
+const Comments = ({ role, userAvatarUrl, articleId, user }) => {
+    const [allComments, setAllComments] = useState(null);
+    const [commentContent, setCommentContent] = useState('');
+    let key = -1;
+
+    const takeCommentHandler = () => {
+        console.log(articleId);
+        console.log(user);
+        console.log(commentContent);
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        axios
+            .post(
+                'http://192.168.43.55:8080/webproj/getComment',
+                {
+                    _id: articleId,
+                    username: user,
+                    content: commentContent,
+                },
+                { headers }
+            )
+            .then((response) => console.log(response))
+            .catch((error) => console.log(error));
+    };
+
+    let leaveCommentSection;
+
+    switch (role) {
+        case 'non-user':
+            leaveCommentSection = (
+                <div className="non-user-login">
+                    Please <Link to="/login">Log In</Link> or{' '}
+                    <Link to="/sign-up">create an account</Link> to leave a
+                    comment...
+                </div>
+            );
+            break;
+
+        case 'admin':
+        case 'moderator':
+            leaveCommentSection = (
+                <div className="non-user-login">
+                    Login a normal account to leave a comment
+                </div>
+            );
+            break;
+
+        default:
+            leaveCommentSection = (
+                <div className="leave-comment">
+                    <img src={userAvatarUrl} alt="Avatar" />
+                    <textarea
+                        placeholder="Leave a comment..."
+                        onChange={(e) => setCommentContent(e.target.value)}
+                    ></textarea>
+                    <button type="button" onClick={takeCommentHandler}>
+                        <FontAwesomeIcon icon={faPaperPlane} />
+                    </button>
+                </div>
+            );
+            break;
+    }
+
+    useEffect(() => {
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        axios
+            .post(
+                'http://192.168.43.55:8080/webproj/postCommentsList',
+                {
+                    _id: articleId,
+                },
+                { headers }
+            )
+            .then((response) => setAllComments(response.data.comments))
+            .catch((error) => console.log(error));
+    }, [articleId]);
+
     return (
         <CommentsStyled>
             <div className="line"></div>
             <h3>Comments:</h3>
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <Comment />
-            <div className="leave-comment">
-                <img
-                    src="https://www.sketchappsources.com/resources/source-image/profile-illustration-gunaldi-yunus.png"
-                    alt="Avatar"
-                />
-                <textarea placeholder="Leave a comment..."></textarea>
-            </div>
+
+            {allComments &&
+                allComments.map((comment) => (
+                    <Comment comment={comment} key={key++} />
+                ))}
+
+            {leaveCommentSection}
         </CommentsStyled>
     );
 };
@@ -43,6 +118,7 @@ const CommentsStyled = styled.div`
         padding: 1rem 2rem 1rem 0;
 
         display: flex;
+        align-items: center;
 
         box-shadow: 1px 1px 2px rgba(30, 30, 30, 0.2);
 
@@ -63,6 +139,26 @@ const CommentsStyled = styled.div`
 
             outline: none;
             resize: none;
+        }
+        button {
+            width: 6rem;
+            height: 3.5rem;
+
+            font-size: 2rem;
+
+            color: #fff;
+            background: linear-gradient(to bottom right, #04d28f, #044cd2);
+            border: none;
+            border-radius: 5px;
+        }
+    }
+    .non-user-login {
+        margin-top: 0.75rem;
+        a {
+            color: #04d28f;
+            &:hover {
+                text-decoration: underline;
+            }
         }
     }
 `;

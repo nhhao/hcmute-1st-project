@@ -1,16 +1,128 @@
+// import { useEffect } from 'react';
+import NavAuthSection from './NavAuthSection';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({
+    role,
+    user,
+    currentCategory,
+    setCurrentCategory,
+    userAvatarUrl,
+    setCurrentPage,
+}) => {
     return (
         <Nav>
             <div className="logo">
-                <Link to="/">Something</Link>
+                <Link
+                    to="/"
+                    onClick={() => {
+                        setCurrentCategory('default');
+                        setCurrentPage(1);
+                        window.scrollTo(0, 0);
+                    }}
+                >
+                    tech-sharing
+                </Link>
             </div>
-            <div className="authentication">
-                <a href="http://google.com">Log In</a>
-                <button>Sign Up</button>
-            </div>
+            <ul>
+                <li>
+                    <Link
+                        to="/"
+                        className={
+                            currentCategory === 'default' ? 'active' : ''
+                        }
+                        onClick={() => {
+                            setCurrentCategory('default');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        Newest
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        to="/"
+                        className={
+                            currentCategory === 'front-end' ? 'active' : ''
+                        }
+                        onClick={() => {
+                            setCurrentCategory('front-end');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        Front-end
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        to="/"
+                        className={
+                            currentCategory === 'back-end' ? 'active' : ''
+                        }
+                        onClick={() => {
+                            setCurrentCategory('back-end');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        Back-end
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        to="/"
+                        className={currentCategory === 'ios' ? 'active' : ''}
+                        onClick={() => {
+                            setCurrentCategory('ios');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        iOS
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        to="/"
+                        className={
+                            currentCategory === 'android' ? 'active' : ''
+                        }
+                        onClick={() => {
+                            setCurrentCategory('android');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        Android
+                    </Link>
+                </li>
+
+                <li>
+                    <Link
+                        to="/"
+                        className={
+                            currentCategory === 'tips-tricks' ? 'active' : ''
+                        }
+                        onClick={() => {
+                            setCurrentCategory('tips-tricks');
+                            setCurrentPage(1);
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        Tips & tricks
+                    </Link>
+                </li>
+            </ul>
+
+            <NavAuthSection
+                role={role}
+                user={user}
+                setCurrentCategory={setCurrentCategory}
+                userAvatarUrl={userAvatarUrl}
+            />
         </Nav>
     );
 };
@@ -29,7 +141,41 @@ const Nav = styled.div`
     align-items: center;
     justify-content: space-between;
 
-    z-index: 5;
+    z-index: 2;
+
+    ul {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        list-style: none;
+
+        li {
+            a {
+                color: #04d28f;
+
+                cursor: pointer;
+                user-select: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+
+                &.active {
+                    color: #323232;
+
+                    cursor: auto;
+                    &:hover {
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            &:not(:first-child) {
+                margin-left: 1.5rem;
+            }
+        }
+    }
 
     .authentication {
         a {
@@ -42,7 +188,7 @@ const Nav = styled.div`
             }
         }
 
-        button {
+        .sign-up {
             padding: 0.5rem 1rem;
             margin-left: 0.5rem;
 
@@ -54,9 +200,6 @@ const Nav = styled.div`
 
             cursor: pointer;
             outline: none;
-            &:hover {
-                transform: translateY(-2px);
-            }
         }
     }
 

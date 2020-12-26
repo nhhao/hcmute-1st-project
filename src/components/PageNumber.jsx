@@ -1,12 +1,30 @@
 import styled from 'styled-components';
 
-const PageNumber = () => {
+const PageNumber = ({
+    articles,
+    numberOfArticles,
+    currentPage,
+    setCurrentPage,
+}) => {
+    const pages = [];
+    const maxPage = Math.floor(numberOfArticles / 10) + 1;
+    for (let i = 0; i < maxPage; i++) {
+        pages.push(i + 1);
+    }
     return (
         <PageNumberStyle>
-            <span>1</span>
-            <span>2</span>
-            <span>...</span>
-            <span>124</span>
+            {pages.map((page) => (
+                <span
+                    key={page}
+                    className={page === currentPage ? 'active' : ''}
+                    onClick={() => {
+                        setCurrentPage(page);
+                        window.scrollTo(0, 0);
+                    }}
+                >
+                    {page}
+                </span>
+            ))}
         </PageNumberStyle>
     );
 };
@@ -16,7 +34,7 @@ const PageNumberStyle = styled.div`
     text-align: center;
 
     span {
-        padding: 0.8rem;
+        padding: 0.8rem 1rem;
 
         border: 1px solid #04d28f;
         color: #04d28f;
@@ -24,18 +42,20 @@ const PageNumberStyle = styled.div`
 
         cursor: pointer;
 
-        &:first-child {
+        &.active {
             border: none;
 
             color: #fff;
             background-color: #04d28f;
         }
 
-        &:not(:first-child) {
-            margin-left: 0.25rem;
+        &:not(.active) {
             &:hover {
                 text-decoration: underline;
             }
+        }
+        &:not(:first-child) {
+            margin-left: 0.25rem;
         }
     }
 `;

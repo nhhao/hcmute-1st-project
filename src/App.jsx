@@ -2,54 +2,128 @@ import Homepage from './pages/Homepage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Article from './pages/Article';
+import SignUp from './pages/SignUp';
+import LogIn from './pages/LogIn';
+import CreateArticle from './pages/CreateArticle';
+import ManageModerator from './pages/ManageModerator';
+import AddModerator from './pages/AddModerator';
 import GlobalStyle from './components/GlobalStyles';
-
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { Switch, Route, useLocation } from 'react-router-dom';
 
-//
-
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-//
-
 function App() {
-    const [articles, setArticles] = useState(null);
-    const headers = {
-        'Content-Type': 'text/plain',
-        // 'Content-Type': 'application/x-www-form-urlencoded',
+    const getRoleFromLocalStorage = () => {
+        const role = localStorage.getItem('role') || 'non-user';
+        return role;
     };
+
+    const setRoleIntoLocalStorage = (role) => {
+        localStorage.setItem('role', role);
+    };
+
+    const getUserFromLocalStorage = () => {
+        const user = localStorage.getItem('user') || '';
+        return user;
+    };
+
+    const setUserIntoLocalStorage = (user) => {
+        localStorage.setItem('user', user);
+    };
+
+    const [user] = useState(getUserFromLocalStorage);
+    const [role] = useState(getRoleFromLocalStorage);
+    const [articles, setArticles] = useState(null);
+    const [currentCategory, setCurrentCategory] = useState('default');
+    const [numberOfArticles, setNumberOfArticles] = useState(0);
+    const [userAvatarUrl, setUserAvatarUrl] = useState(
+        'https://thuthuatnhanh.com/wp-content/uploads/2019/10/anh-avatar-buc-minh-de-thuong.jpg'
+    );
+    const [currentPage, setCurrentPage] = useState(1);
+
     useEffect(() => {
-        axios
-            .get(
-                'http://newsapi.org/v2/everything?q=apple&from=2020-12-14&to=2020-08-14&sortBy=popularity&apiKey=cb20d7f029194a348867100d6f717707'
-            )
-            .then((response) => setArticles(response.data.articles))
-            .catch((error) => console.error(error));
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                'http://123.21.172.185:8080/afs/abc',
-                { data: { pageNumber: 2 } },
+                `http://192.168.43.55:8080/webproj/postArticlesList`,
+                {
+                    pageNumber: currentPage,
+                    category: currentCategory,
+                },
+                {
+                    headers,
+                }
+            )
+            .then((response) => {
+                setArticles(response.data.articles);
+                setNumberOfArticles(response.data.numberOfArticles);
+            })
+            .catch((error) => console.error(error));
+
+        axios
+            .post(
+                'http://192.168.43.55:8080/webproj/postUserAvatar',
+                {
+                    username: user,
+                },
                 { headers }
             )
-            .then((response) => console.log(response))
+            .then((response) => setUserAvatarUrl(response.data.avatarUrl))
             .catch((error) => console.log(error));
-    }, []);
+    }, [currentCategory, currentPage, user]);
 
     const location = useLocation();
 
     return (
         <div>
             <GlobalStyle />
-            <Navbar />
+            <Navbar
+                userAvatarUrl={userAvatarUrl}
+                role={role}
+                user={user}
+                currentCategory={currentCategory}
+                setCurrentCategory={setCurrentCategory}
+                setCurrentPage={setCurrentPage}
+            />
             <Switch location={location} key={location.pathname}>
                 {articles && (
                     <Route path="/" exact>
-                        <Homepage articles={articles} />
+                        <Homepage
+                            articles={articles}
+                            numberOfArticles={numberOfArticles}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                        />
                     </Route>
                 )}
-                <Route path="/article" exact>
-                    <Article />
+                <Route path="/article/:id">
+                    {articles && (
+                        <Article
+                            articles={articles}
+                            role={role}
+                            userAvatarUrl={userAvatarUrl}
+                            user={user}
+                        />
+                    )}
+                </Route>
+                <Route path="/sign-up">
+                    <SignUp />
+                </Route>
+                <Route path="/login">
+                    <LogIn
+                        setRole={setRoleIntoLocalStorage}
+                        setUserIntoLocalStorage={setUserIntoLocalStorage}
+                        role={role}
+                    />
+                </Route>
+                <Route path="/create-article">
+                    <CreateArticle user={user} />
+                </Route>
+                <Route path="/manage-moderator">
+                    <ManageModerator />
+                </Route>
+                <Route path="/add-moderator">
+                    <AddModerator />
                 </Route>
             </Switch>
             <Footer />
