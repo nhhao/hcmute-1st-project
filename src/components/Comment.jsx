@@ -11,7 +11,7 @@ const Comment = ({ comment }) => {
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/postUserAvatar',
+                'http://123.21.133.33/webproj/postUserAvatar',
                 {
                     username: comment.username,
                 },

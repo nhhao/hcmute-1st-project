@@ -7,6 +7,7 @@ import LogIn from './pages/LogIn';
 import CreateArticle from './pages/CreateArticle';
 import ManageModerator from './pages/ManageModerator';
 import AddModerator from './pages/AddModerator';
+import SignUpSuccessfully from './pages/SignUpSuccessfully';
 import GlobalStyle from './components/GlobalStyles';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -45,7 +46,7 @@ function App() {
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                `http://192.168.43.55:8080/webproj/postArticlesList`,
+                `http://123.21.133.33:8080/webproj/postArticlesList`,
                 {
                     pageNumber: currentPage,
                     category: currentCategory,
@@ -62,7 +63,7 @@ function App() {
 
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/postUserAvatar',
+                'http://123.21.133.33:8080/webproj/postUserAvatar',
                 {
                     username: user,
                 },
@@ -108,6 +109,9 @@ function App() {
                 </Route>
                 <Route path="/sign-up">
                     <SignUp />
+                </Route>
+                <Route path="/successfully">
+                    <SignUpSuccessfully />
                 </Route>
                 <Route path="/login">
                     <LogIn

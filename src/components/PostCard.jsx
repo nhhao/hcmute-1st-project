@@ -14,7 +14,7 @@ const PostCard = ({ article }) => {
                 <p>{article.description}</p>
             </Content>
             <Author>Author: {article.author}</Author>
-            <Date>Date: {article.datetime}</Date>
+            <Date>Date: {article.datetime.slice(0, 16)}</Date>
             <Vote>
                 <FontAwesomeIcon icon={faCaretUp} />{' '}
                 <span>{article.upVote - article.downVote}</span>

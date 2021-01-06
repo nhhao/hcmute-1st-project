@@ -24,14 +24,16 @@ const NavAuthSection = ({ role, user, setCurrentCategory, userAvatarUrl }) => {
 
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/getUserAvatar',
+                'http://123.21.133.33:8080/webproj/getUserAvatar',
                 {
                     username: user,
                     avatarUrl: avatarUpdateUrl,
                 },
                 { headers }
             )
-            .then((response) => console.log(response))
+            .then((response) => {
+                if (response.data.success === true) window.location.href = '/';
+            })
             .catch((error) => console.log(error));
     };
 

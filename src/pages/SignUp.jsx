@@ -8,6 +8,7 @@ const SignUp = () => {
     const [passwordCheckMessage, setPasswordCheckMessage] = useState('');
     const [passwordRetype, setPasswordRetype] = useState('');
     const [password, setPassword] = useState('');
+    const [isNotExistedUsername, setIsNotExistUsername] = useState(true);
 
     const retypePasswordHandler = (e) => {
         e.target.value === password
@@ -24,18 +25,42 @@ const SignUp = () => {
         };
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
-        if (password === passwordRetype && username !== '') {
+        if (
+            password === passwordRetype &&
+            username !== '' &&
+            password &&
+            isNotExistedUsername
+        ) {
             axios
                 .post(
-                    `http://192.168.43.55:8080/webproj/getSignUpInfo`,
+                    `http://123.21.133.33:8080/webproj/getSignUpInfo`,
                     apiData,
                     {
                         headers,
                     }
                 )
-                .then((response) => console.log(response))
+                .then((window.location.href = '/successfully'))
                 .catch((error) => console.error(error));
         }
+    };
+
+    const usernameValidate = (e) => {
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+        axios
+            .post(
+                'http://123.21.133.33:8080/webproj/postIsNotExistNormUsername',
+                {
+                    currentUsername: e.target.value,
+                },
+                { headers }
+            )
+            .then((response) =>
+                response.data.isNotExisted
+                    ? setIsNotExistUsername(true)
+                    : setIsNotExistUsername(false)
+            );
+        setUsername(e.target.value);
     };
 
     return (
@@ -45,8 +70,11 @@ const SignUp = () => {
                 <input
                     type="text"
                     placeholder="Username"
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => usernameValidate(e)}
                 />
+                {!isNotExistedUsername && (
+                    <span>This username was existed</span>
+                )}
                 <input
                     type="password"
                     placeholder="Password"

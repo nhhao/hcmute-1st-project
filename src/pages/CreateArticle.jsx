@@ -14,7 +14,7 @@ const CreateArticle = ({ user }) => {
     const markdown = new Remarkable();
 
     const createArticleHandler = () => {
-        const apiUrl = 'http://192.168.43.55:8080/webproj/getArticle';
+        const apiUrl = 'http://123.21.133.33:8080/webproj/getArticle';
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         const data = {
             title: title,
@@ -24,7 +24,9 @@ const CreateArticle = ({ user }) => {
             thumbnailUrl: thumbnailUrl,
             author: user,
         };
-        axios.post(apiUrl, data, { headers });
+        axios
+            .post(apiUrl, data, { headers })
+            .then((window.location.href = '/'));
     };
 
     return (

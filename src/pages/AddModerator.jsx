@@ -8,7 +8,7 @@ const AddModerator = () => {
     const [passwordCheckMessage, setPasswordCheckMessage] = useState('');
     const [passwordRetype, setPasswordRetype] = useState('');
     const [password, setPassword] = useState('');
-    const [displayName, setDisplayName] = useState('');
+    const [isNotExistedUsername, setIsNotExistUsername] = useState(true);
 
     const retypePasswordHandler = (e) => {
         e.target.value === password
@@ -21,23 +21,47 @@ const AddModerator = () => {
         const apiData = {
             username: username,
             password: password,
-            displayName: displayName,
+            displayName: 'Hello',
             role: 2,
         };
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
-        if (password === passwordRetype && username !== '') {
+        if (
+            password === passwordRetype &&
+            username !== '' &&
+            password &&
+            isNotExistedUsername
+        ) {
             axios
                 .post(
-                    `http://192.168.43.55:8080/webproj/getModCreateAccInfo`,
+                    `http://123.21.133.33:8080/webproj/getModCreateAccInfo`,
                     apiData,
                     {
                         headers,
                     }
                 )
-                .then((response) => console.log(response))
+                .then((window.location.href = '/'))
                 .catch((error) => console.error(error));
         }
+    };
+
+    const usernameValidate = (e) => {
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+        axios
+            .post(
+                'http://123.21.133.33:8080/webproj/postIsNotExistModUsername',
+                {
+                    currentUsername: e.target.value,
+                },
+                { headers }
+            )
+            .then((response) =>
+                response.data.isNotExisted
+                    ? setIsNotExistUsername(true)
+                    : setIsNotExistUsername(false)
+            );
+        setUsername(e.target.value);
     };
 
     return (
@@ -47,8 +71,11 @@ const AddModerator = () => {
                 <input
                     type="text"
                     placeholder="Username"
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => usernameValidate(e)}
                 />
+                {!isNotExistedUsername && (
+                    <span>This username was existed</span>
+                )}
                 <input
                     type="password"
                     placeholder="Password"
@@ -62,14 +89,9 @@ const AddModerator = () => {
                     placeholder="Retype password"
                     onChange={retypePasswordHandler}
                 />
-                <input
-                    type="text"
-                    placeholder="Your display name"
-                    onChange={(e) => setDisplayName(e.target.value)}
-                />
                 <span>{passwordCheckMessage}</span>
                 <button type="button" onClick={AddModeratorHandler}>
-                    Create my account
+                    Create moderator account
                 </button>
                 <Link to="/">Back to homepage</Link>
             </form>

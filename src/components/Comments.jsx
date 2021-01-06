@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Comment from './Comment';
@@ -9,6 +9,7 @@ import axios from 'axios';
 const Comments = ({ role, userAvatarUrl, articleId, user }) => {
     const [allComments, setAllComments] = useState(null);
     const [commentContent, setCommentContent] = useState('');
+    const commentFieldRef = useRef(null);
     let key = -1;
 
     const takeCommentHandler = () => {
@@ -18,7 +19,7 @@ const Comments = ({ role, userAvatarUrl, articleId, user }) => {
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/getComment',
+                'http://123.21.133.33:8080/webproj/getComment',
                 {
                     _id: articleId,
                     username: user,
@@ -26,7 +27,7 @@ const Comments = ({ role, userAvatarUrl, articleId, user }) => {
                 },
                 { headers }
             )
-            .then((response) => console.log(response))
+            .then((commentFieldRef.current.value = ''))
             .catch((error) => console.log(error));
     };
 
@@ -59,6 +60,7 @@ const Comments = ({ role, userAvatarUrl, articleId, user }) => {
                     <textarea
                         placeholder="Leave a comment..."
                         onChange={(e) => setCommentContent(e.target.value)}
+                        ref={commentFieldRef}
                     ></textarea>
                     <button type="button" onClick={takeCommentHandler}>
                         <FontAwesomeIcon icon={faPaperPlane} />
@@ -72,7 +74,7 @@ const Comments = ({ role, userAvatarUrl, articleId, user }) => {
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/postCommentsList',
+                'http://123.21.133.33:8080/webproj/postCommentsList',
                 {
                     _id: articleId,
                 },
@@ -80,7 +82,7 @@ const Comments = ({ role, userAvatarUrl, articleId, user }) => {
             )
             .then((response) => setAllComments(response.data.comments))
             .catch((error) => console.log(error));
-    }, [articleId]);
+    }, [articleId, allComments]);
 
     return (
         <CommentsStyled>

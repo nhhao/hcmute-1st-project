@@ -25,7 +25,7 @@ const LogIn = ({ setRole, setUserIntoLocalStorage }) => {
                     password &&
                     axios
                         .post(
-                            'http://192.168.43.55:8080/webproj/getLogInRequest',
+                            'http://123.21.133.33:8080/webproj/getLogInRequest',
                             {
                                 username: username,
                                 password: password,
@@ -47,7 +47,7 @@ const LogIn = ({ setRole, setUserIntoLocalStorage }) => {
                     password &&
                     axios
                         .post(
-                            'http://192.168.43.55:8080/webproj/getLogInRequest',
+                            'http://123.21.133.33:8080/webproj/getLogInRequest',
                             {
                                 username: username,
                                 password: password,
@@ -63,7 +63,6 @@ const LogIn = ({ setRole, setUserIntoLocalStorage }) => {
                             }
                         })
                         .catch((error) => console.log(error));
-                break;
                 break;
         }
     };

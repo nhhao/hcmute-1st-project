@@ -8,19 +8,36 @@ const ManageModerator = () => {
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         axios
             .post(
-                'http://192.168.43.55:8080/webproj/postModsList',
+                'http://123.21.133.33:8080/webproj/postModsList',
                 {},
                 { headers }
             )
             .then((response) => setModerators(response.data.moderators))
             .catch((error) => console.log(error));
-    }, []);
+    }, [moderators]);
+
+    const deleteModeratorHandler = (moderator) => {
+        const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        axios.post(
+            'http://123.21.133.33:8080/webproj/getModToDelete',
+            {
+                username: moderator.username,
+            },
+            { headers }
+        );
+    };
+
     return (
         <ManageModStyled>
             <h2>List of all moderator</h2>
             {moderators.map((moderator) => (
-                <div>
-                    <button type="button">Delete</button>
+                <div key={moderator.username}>
+                    <button
+                        type="button"
+                        onClick={() => deleteModeratorHandler(moderator)}
+                    >
+                        Delete
+                    </button>
                     <span>{moderator.username}</span>
                 </div>
             ))}

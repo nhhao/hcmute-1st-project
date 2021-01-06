@@ -4,20 +4,77 @@ import { useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { Remarkable } from 'remarkable';
 import { Markup } from 'interweave';
+import axios from 'axios';
 
 const Article = ({ articles, role, userAvatarUrl, user }) => {
     const history = useHistory();
     const url = history.location.pathname.slice(1);
     const [article, setArticle] = useState(null);
-    const markdown = new Remarkable();
+
+    // const [isVoteButtonClicked, setIsVoteButtonClicked] = useState({
+    //     up: false,
+    //     down: false,
+    // });
+
     useEffect(() => {
         const currentArticle = articles.filter(
             (article) => article.url === url
         )[0];
         setArticle(currentArticle);
     }, [url, articles]);
+
+    // useEffect(() => {
+    // const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+    // article &&
+    //     axios.post(
+    //         'http://123.21.133.33:8080/webproj/getArticleVoteState',
+    //         {
+    //             _id: article._id,
+    //             username: user,
+    //             isUpButtonClicked: isVoteButtonClicked.up,
+    //             isDownButtonClicked: isVoteButtonClicked.down,
+    //         },
+    //         { headers }
+    //     );
+
+    // article &&
+    //     axios
+    //         .post(
+    //             'http://123.21.133.33:8080/webproj/postArticleVoteState',
+    //             {
+    //                 _id: article._id,
+    //                 username: user,
+    //             },
+    //             { headers }
+    //         )
+    //         .then((response) => {
+    //             if (response.data.isUpButtonClicked)
+    //                 setIsVoteButtonClicked({ up: true, down: false });
+    //             else if (response.data.isDownButtonClicked)
+    //                 setIsVoteButtonClicked({ up: false, down: true });
+    //         });
+    // }, [
+    //     isVoteButtonClicked.up,
+    //     isVoteButtonClicked.down,
+    //     article,
+    //     user,
+    //     isVoteButtonClicked,
+    // ]);
+
+    // const voteHandler = (state) => {
+    //     if (state === 'up') {
+    //         if (isVoteButtonClicked.up === true)
+    //             setIsVoteButtonClicked({ up: false, down: false });
+    //         else {
+    //             setIsVoteButtonClicked({ up: true, down: false });
+    //         }
+    //     } else {
+    //         if (isVoteButtonClicked.down === true)
+    //             setIsVoteButtonClicked({ up: false, down: false });
+    //         else setIsVoteButtonClicked({ up: false, down: true });
+    //     }
+    // };
 
     return (
         <>
@@ -29,16 +86,26 @@ const Article = ({ articles, role, userAvatarUrl, user }) => {
                             <span>Written by: {article.author}</span>
                             <span>Published {article.datetime}</span>
                             <span className="vote">
-                                <FontAwesomeIcon icon={faCaretUp} />
+                                <FontAwesomeIcon
+                                    icon={faCaretUp}
+                                    // onClick={() => voteHandler('up')}
+                                    // className={
+                                    // isUpButtonClicked ? 'active' : ''
+                                    // }
+                                />
                                 <span>{article.upVote - article.downVote}</span>
-                                <FontAwesomeIcon icon={faCaretDown} />
+                                <FontAwesomeIcon
+                                    icon={faCaretDown}
+                                    // onClick={() => voteHandler('down')}
+                                    // className={
+                                    // isDownButtonClicked ? 'active' : ''
+                                    // }
+                                />
                             </span>
                         </div>
-                        <div className="content">
-                            <p>
-                                <Markup content={article.content} />
-                            </p>
-                        </div>
+                        <article className="content">
+                            <Markup content={article.content} />
+                        </article>
                     </ArticleStyled>
                     <Comments
                         role={role}
@@ -80,6 +147,10 @@ const ArticleStyled = styled.article`
         span {
             margin-left: 0.35rem;
         }
+
+        svg.active {
+            color: #04d28f;
+        }
     }
 
     .info {
@@ -113,6 +184,13 @@ const ArticleStyled = styled.article`
         h2 + p,
         h3 + p {
             text-indent: 3rem;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 50vh;
+            max-height: 70vh;
         }
     }
 `;
